@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight, BarChart3, BriefcaseBusiness, Clapperboard, Instagram,
   Layers3, Linkedin, Menu, MessageSquare, Palette, Play, Rocket,
@@ -49,15 +49,43 @@ function Logo() {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const heroVisualRef = useRef(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('visible')),
+      entries => entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible')
+          observer.unobserve(entry.target)
+        }
+      }),
       { threshold: 0.08 },
     )
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+    document.querySelectorAll('.reveal, .reveal-item').forEach(el => observer.observe(el))
     return () => observer.disconnect()
   }, [])
+
+  const handleHeroPointerMove = event => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2
+    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2
+    event.currentTarget.style.setProperty('--parallax-x', `${x * 7}px`)
+    event.currentTarget.style.setProperty('--parallax-y', `${y * 5}px`)
+    event.currentTarget.style.setProperty('--portrait-x', `${x * 2.5}px`)
+    event.currentTarget.style.setProperty('--portrait-y', `${y * 1.8}px`)
+    event.currentTarget.style.setProperty('--orbit-x', `${x * -2}px`)
+    event.currentTarget.style.setProperty('--orbit-y', `${y * -1.5}px`)
+  }
+
+  const resetHeroParallax = event => {
+    event.currentTarget.style.setProperty('--parallax-x', '0px')
+    event.currentTarget.style.setProperty('--parallax-y', '0px')
+    event.currentTarget.style.setProperty('--portrait-x', '0px')
+    event.currentTarget.style.setProperty('--portrait-y', '0px')
+    event.currentTarget.style.setProperty('--orbit-x', '0px')
+    event.currentTarget.style.setProperty('--orbit-y', '0px')
+  }
 
   return (
     <>
@@ -98,11 +126,40 @@ function App() {
             </div>
           </div>
 
-          <div className="hero-visual hero-enter">
-            <div className="orbit orbit-one"><i /><i /></div>
-            <div className="orbit orbit-two"><i /><i /></div>
-            <div className="orbit orbit-three"><i /></div>
+          <div
+            className="hero-visual hero-enter"
+            ref={heroVisualRef}
+            onPointerMove={handleHeroPointerMove}
+            onPointerLeave={resetHeroParallax}
+          >
+            <div className="hero-glow" />
+            <div className="decorative-dots" aria-hidden="true"><i /><i /><i /><i /></div>
+            <svg className="orbit-layer orbit-back" viewBox="0 0 560 460" aria-hidden="true">
+              <g className="ring-group ring-blue">
+                <ellipse cx="280" cy="230" rx="252" ry="112" transform="rotate(-25 280 230)" />
+                <circle className="orbit-dot dot-blue" cx="55" cy="147" r="6" />
+              </g>
+              <g className="ring-group ring-purple">
+                <ellipse cx="280" cy="230" rx="245" ry="142" transform="rotate(-7 280 230)" />
+                <circle className="orbit-dot dot-purple" cx="405" cy="101" r="6" />
+              </g>
+              <g className="ring-group ring-pink">
+                <ellipse cx="280" cy="230" rx="248" ry="116" transform="rotate(19 280 230)" />
+                <circle className="orbit-dot dot-pink" cx="506" cy="305" r="6" />
+              </g>
+            </svg>
             <div className="portrait-card"><img src={heroPortrait} alt="Placeholder portrait for Lourus Media" /></div>
+            <svg className="orbit-layer orbit-front" viewBox="0 0 560 460" aria-hidden="true">
+              <g className="ring-group ring-blue front-ring">
+                <ellipse cx="280" cy="230" rx="252" ry="112" transform="rotate(-25 280 230)" />
+              </g>
+              <g className="ring-group ring-purple front-ring front-purple">
+                <ellipse cx="280" cy="230" rx="245" ry="142" transform="rotate(-7 280 230)" />
+              </g>
+              <g className="ring-group ring-pink front-ring front-pink">
+                <ellipse cx="280" cy="230" rx="248" ry="116" transform="rotate(19 280 230)" />
+              </g>
+            </svg>
             <div className="float-card card-engagement"><span className="float-symbol green"><TrendingUp size={18} /></span><div><strong>+142%</strong><small>Engagement</small></div></div>
             <div className="float-card card-strategy"><span className="float-symbol purple"><Sparkles size={17} /></span><div><strong>Creative</strong><small>Strategy</small></div></div>
             <div className="float-card card-views"><span className="float-symbol pink"><Play size={16} fill="currentColor" /></span><div><strong>1M+</strong><small>Views</small></div></div>
@@ -116,8 +173,8 @@ function App() {
               <a href="#services" className="text-link">View All Services <ArrowRight size={14} /></a>
             </div>
             <div className="service-grid">
-              {services.map(({ icon: Icon, title, text, tone }) => (
-                <article className="service-card" key={title}>
+              {services.map(({ icon: Icon, title, text, tone }, index) => (
+                <article className="service-card reveal-item" style={{ '--stagger': `${index * 55}ms` }} key={title}>
                   <span className={`service-icon ${tone}`}><Icon size={21} /></span>
                   <h3>{title}</h3><p>{text}</p><ArrowRight className="service-arrow" size={15} />
                 </article>
@@ -131,8 +188,8 @@ function App() {
               <a href="#work" className="text-link">View All Work <ArrowRight size={14} /></a>
             </div>
             <div className="work-grid">
-              {work.map(item => (
-                <article className="work-card" key={item.title}>
+              {work.map((item, index) => (
+                <article className="work-card reveal-item" style={{ '--stagger': `${index * 65}ms` }} key={item.title}>
                   <img src={item.image} alt={`${item.category} campaign placeholder`} />
                   <div className="work-overlay">
                     <button className="play-button" aria-label={`Play ${item.title}`}><Play size={15} fill="currentColor" /></button>
@@ -152,8 +209,8 @@ function App() {
             <span className="kicker">Why choose us</span>
             <div className="why-grid">
               <div className="strength-grid">
-                {strengths.map(({ icon: Icon, title, text, tone }) => (
-                  <article className="strength-card" key={title}><span className={`strength-icon ${tone}`}><Icon size={20} /></span><div><h3>{title}</h3><p>{text}</p></div></article>
+                {strengths.map(({ icon: Icon, title, text, tone }, index) => (
+                  <article className="strength-card reveal-item" style={{ '--stagger': `${index * 55}ms` }} key={title}><span className={`strength-icon ${tone}`}><Icon size={20} /></span><div><h3>{title}</h3><p>{text}</p></div></article>
                 ))}
               </div>
               <article className="impact-card">
