@@ -1,35 +1,50 @@
 import { useEffect, useState } from 'react'
 import {
-  ArrowRight, BarChart3, Clapperboard, Compass, Instagram, Layers3,
-  Linkedin, Menu, Megaphone, Palette, Play, Rocket, Sparkles, Target,
-  TrendingUp, Video, X, Youtube, Zap
+  ArrowRight, BarChart3, BriefcaseBusiness, Clapperboard, Instagram,
+  Layers3, Linkedin, Menu, MessageSquare, Palette, Play, Rocket,
+  Sparkles, Target, TrendingUp, Users, Video, X, Youtube, Zap,
 } from 'lucide-react'
+import heroPortrait from './assets/hero-portrait.png'
+import beverageImage from './assets/work-beverage.png'
+import fashionImage from './assets/work-fashion.png'
+import beautyImage from './assets/work-beauty.png'
+import techImage from './assets/work-tech.png'
 
 const services = [
-  { icon: Megaphone, title: 'Social Media Management', text: 'Always-on social that keeps your audience close.', tone: 'purple' },
-  { icon: Sparkles, title: 'Content Creation', text: 'Original ideas made to earn attention and action.', tone: 'blue' },
-  { icon: Video, title: 'Video Production', text: 'From first frame to final cut, built for the feed.', tone: 'pink' },
-  { icon: Compass, title: 'Brand Strategy', text: 'Clear positioning that gives every post purpose.', tone: 'orange' },
-  { icon: Target, title: 'Paid Advertising', text: 'Smart campaigns focused on measurable growth.', tone: 'green' },
-  { icon: Palette, title: 'Graphic Design', text: 'Distinct visuals that make your brand recognizable.', tone: 'cyan' },
+  { icon: MessageSquare, title: 'Social Media Management', text: 'We handle your social media, so you can focus on your business.', tone: 'purple' },
+  { icon: Sparkles, title: 'Content Creation', text: 'Scroll-stopping content that connects, engages, and converts.', tone: 'blue' },
+  { icon: Video, title: 'Video Production', text: 'High-quality videos that bring your brand story to life.', tone: 'cyan' },
+  { icon: Target, title: 'Brand Strategy', text: 'Smart strategy that builds strong brands that stand out.', tone: 'green' },
+  { icon: MegaphoneIcon, title: 'Paid Advertising', text: 'Targeted ads that reach the right people and drive real results.', tone: 'pink' },
+  { icon: Palette, title: 'Graphic Design', text: 'Eye-catching designs that communicate your brand message.', tone: 'orange' },
 ]
 
+function MegaphoneIcon(props) {
+  return <BarChart3 {...props} />
+}
+
 const work = [
-  { title: 'Fizz in Full Colour', category: 'Beverage Campaign', subtitle: 'A summer launch built to sparkle.', cls: 'work-one' },
-  { title: 'Own the Moment', category: 'Fashion Reel Campaign', subtitle: 'Movement, mood and modern style.', cls: 'work-two' },
-  { title: 'Glow, Naturally', category: 'Beauty Product Reel', subtitle: 'A softer story for brighter skin.', cls: 'work-three' },
-  { title: 'Tomorrow, Unboxed', category: 'Tech Launch Campaign', subtitle: 'Turning a launch into an event.', cls: 'work-four' },
+  { title: 'Fizzy Bubbles', category: 'Beverage', subtitle: 'Campaign Video', image: beverageImage },
+  { title: 'Urban Steps', category: 'Fashion', subtitle: 'Reel Campaign', image: fashionImage },
+  { title: 'Glow Naturally', category: 'Beauty', subtitle: 'Product Reel', image: beautyImage },
+  { title: 'SoundMax', category: 'Tech', subtitle: 'Launch Campaign', image: techImage },
 ]
 
 const strengths = [
-  { icon: Compass, title: 'Strategy First', text: 'Every creative choice starts with a clear reason.' },
-  { icon: Zap, title: 'Fast Creative Execution', text: 'Speed, without ever compromising the craft.' },
-  { icon: Layers3, title: 'Platform-Specific Content', text: 'Native ideas made for where they will live.' },
-  { icon: BarChart3, title: 'Measurable Growth', text: 'Creative you can feel, results you can prove.' },
+  { icon: MessageSquare, title: 'Strategy First', text: 'We start with strategy, so every piece of content has a purpose and a plan.', tone: 'purple' },
+  { icon: Users, title: 'Fast Creative Execution', text: 'We move fast without compromising on quality. Ideas into content, quickly.', tone: 'blue' },
+  { icon: Layers3, title: 'Platform-Specific Content', text: 'We create content tailored for each platform and audience.', tone: 'green' },
+  { icon: TrendingUp, title: 'Measurable Growth', text: 'We track, test, and optimize for results that actually grow your brand.', tone: 'orange' },
 ]
 
-function Reveal({ children, className = '' }) {
-  return <div className={`reveal ${className}`}>{children}</div>
+const links = ['Home', 'Services', 'Work', 'About']
+
+function Reveal({ children, className = '', as: Tag = 'div', ...props }) {
+  return <Tag className={`reveal ${className}`} {...props}>{children}</Tag>
+}
+
+function Logo() {
+  return <a href="#home" className="logo" aria-label="Lourus Media home">Lourus <span>Media</span></a>
 }
 
 function App() {
@@ -38,7 +53,7 @@ function App() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('visible')),
-      { threshold: 0.12 },
+      { threshold: 0.08 },
     )
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
     return () => observer.disconnect()
@@ -48,131 +63,121 @@ function App() {
     <>
       <header className="nav-wrap">
         <nav className="navbar">
-          <a href="#home" className="logo" aria-label="Lourus Media home"><span>L</span>Lourus Media</a>
+          <Logo />
           <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
-            {['Home', 'Services', 'Work', 'About'].map(item => (
-              <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>{item}</a>
-            ))}
-            <a href="#contact" className="button button-small">Let's Talk <ArrowRight size={16} /></a>
+            {links.map(item => <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>{item}</a>)}
           </div>
-          <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
-            {menuOpen ? <X /> : <Menu />}
-          </button>
+          <div className="nav-actions">
+            <a href="#contact" className="button button-small">Let's Talk</a>
+            <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
+              {menuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
         </nav>
       </header>
 
       <main>
         <section className="hero section" id="home">
           <div className="hero-copy hero-enter">
-            <div className="eyebrow"><Sparkles size={15} /> Creative Social Media Agency</div>
+            <div className="eyebrow"><i /> Creative Social Media Agency</div>
             <h1>We turn brands into digital experiences <span>people remember.</span></h1>
-            <p className="hero-text">Strategy, content and campaigns designed to make ambitious brands impossible to scroll past.</p>
+            <p className="hero-text">We help ambitious brands grow with smart strategy, scroll-stopping content, and data-driven social media campaigns that deliver real results.</p>
             <div className="hero-actions">
-              <a className="button" href="#contact">Start a Project <ArrowRight size={18} /></a>
-              <a className="button button-ghost" href="#work">View Our Work <Play size={17} fill="currentColor" /></a>
+              <a className="button" href="#contact">Start a Project <ArrowRight size={16} /></a>
+              <a className="button button-ghost" href="#work">View Our Work <Play size={14} fill="currentColor" /></a>
             </div>
             <div className="stats">
-              {[['50+', 'Projects'], ['20+', 'Brands'], ['1M+', 'Reach'], ['8+', 'Markets']].map(([num, label]) => (
-                <div className="stat" key={label}><strong>{num}</strong><span>{label}</span></div>
+              {[
+                [BriefcaseBusiness, '50+', 'Projects', 'purple'],
+                [Users, '20+', 'Brands', 'blue'],
+                [TrendingUp, '1M+', 'Reach', 'green'],
+                [Sparkles, '8+', 'Markets', 'orange'],
+              ].map(([Icon, num, label, tone]) => (
+                <div className="stat" key={label}><span className={`stat-icon ${tone}`}><Icon size={18} /></span><div><strong>{num}</strong><small>{label}</small></div></div>
               ))}
             </div>
           </div>
 
           <div className="hero-visual hero-enter">
             <div className="orbit orbit-one"><i /><i /></div>
-            <div className="orbit orbit-two"><i /></div>
-            <div className="portrait-card">
-              <div className="portrait-art">
-                <div className="portrait-sun" />
-                <div className="portrait-person">
-                  <div className="hair" /><div className="head" /><div className="body" />
-                </div>
-                <div className="portrait-label">PLACEHOLDER PORTRAIT</div>
-              </div>
+            <div className="orbit orbit-two"><i /><i /></div>
+            <div className="orbit orbit-three"><i /></div>
+            <div className="portrait-card"><img src={heroPortrait} alt="Placeholder portrait for Lourus Media" /></div>
+            <div className="float-card card-engagement"><span className="float-symbol green"><TrendingUp size={18} /></span><div><strong>+142%</strong><small>Engagement</small></div></div>
+            <div className="float-card card-strategy"><span className="float-symbol purple"><Sparkles size={17} /></span><div><strong>Creative</strong><small>Strategy</small></div></div>
+            <div className="float-card card-views"><span className="float-symbol pink"><Play size={16} fill="currentColor" /></span><div><strong>1M+</strong><small>Views</small></div></div>
+          </div>
+        </section>
+
+        <Reveal className="content-shell section" as="section">
+          <div className="inner-section" id="services">
+            <div className="section-heading">
+              <div><span className="kicker">Services</span><h2>Everything your brand needs to stand out.</h2></div>
+              <a href="#services" className="text-link">View All Services <ArrowRight size={14} /></a>
             </div>
-            <div className="float-card card-engagement"><span className="icon-chip pink"><TrendingUp size={17} /></span><div><strong>+142%</strong><small>Engagement</small></div></div>
-            <div className="float-card card-strategy"><span className="icon-chip purple"><Sparkles size={17} /></span><div><strong>Creative</strong><small>Strategy</small></div></div>
-            <div className="float-card card-views"><span className="icon-chip blue"><Play size={17} fill="currentColor" /></span><div><strong>1M+</strong><small>Views</small></div></div>
-          </div>
-        </section>
-
-        <Reveal className="services-shell section" >
-          <div className="section-heading" id="services">
-            <div><span className="kicker">What we do</span><h2>Everything your brand needs <span>to stand out.</span></h2></div>
-            <p>One creative partner for the strategy, content and momentum your brand deserves.</p>
-          </div>
-          <div className="service-grid">
-            {services.map(({ icon: Icon, title, text, tone }) => (
-              <article className="service-card" key={title}>
-                <span className={`service-icon ${tone}`}><Icon size={23} /></span>
-                <h3>{title}</h3><p>{text}</p>
-                <span className="round-arrow"><ArrowRight size={16} /></span>
-              </article>
-            ))}
-          </div>
-        </Reveal>
-
-        <section className="section work-section" id="work">
-          <Reveal className="section-heading work-heading">
-            <div><span className="kicker">Selected work</span><h2>Work that stops <span>the scroll.</span></h2></div>
-            <a href="#work" className="text-link">Explore all work <ArrowRight size={17} /></a>
-          </Reveal>
-          <Reveal className="work-grid">
-            {work.map(item => (
-              <article className="work-card" key={item.title}>
-                <div className={`work-image ${item.cls}`}>
-                  <span className="work-shape" /><span className="work-object" />
-                  <button className="play-button" aria-label={`Play ${item.title}`}><Play size={19} fill="currentColor" /></button>
-                </div>
-                <div className="work-info"><span>{item.category}</span><h3>{item.title}</h3><p>{item.subtitle}</p></div>
-              </article>
-            ))}
-          </Reveal>
-        </section>
-
-        <Reveal className="logo-section section">
-          <p>Trusted by ambitious brands</p>
-          <div className="logo-row">{['RiseUp', 'Boldify', 'Nexora', 'Lumina', 'Velocity', 'Bloomly'].map((name, i) => <span key={name} className={`brand-${i}`}>{name}</span>)}</div>
-        </Reveal>
-
-        <section className="section why-section" id="about">
-          <Reveal className="section-heading centered">
-            <div><span className="kicker">Why Lourus</span><h2>Built for brands <span>going places.</span></h2></div>
-            <p>Small enough to care deeply. Experienced enough to move the needle.</p>
-          </Reveal>
-          <Reveal className="why-grid">
-            <div className="strength-grid">
-              {strengths.map(({ icon: Icon, title, text }, index) => (
-                <article className="strength-card" key={title}><span>{`0${index + 1}`}</span><Icon size={22} /><h3>{title}</h3><p>{text}</p></article>
+            <div className="service-grid">
+              {services.map(({ icon: Icon, title, text, tone }) => (
+                <article className="service-card" key={title}>
+                  <span className={`service-icon ${tone}`}><Icon size={21} /></span>
+                  <h3>{title}</h3><p>{text}</p><ArrowRight className="service-arrow" size={15} />
+                </article>
               ))}
             </div>
-            <article className="impact-card">
-              <div className="impact-orb" />
-              <span className="impact-icon"><Rocket size={28} /></span>
-              <h2>We don't just create content, <em>we create impact.</em></h2>
-              <p>Ideas with energy. Strategy with focus. Work that gets remembered.</p>
-              <a className="button button-light" href="#contact">Let's Work Together <ArrowRight size={18} /></a>
-            </article>
-          </Reveal>
-        </section>
-
-        <Reveal className="final-cta section" id="contact">
-          <div>
-            <span className="rocket-chip"><Rocket size={25} /></span>
-            <h2>Ready to make your brand <span>impossible to ignore?</span></h2>
           </div>
-          <a className="button" href="mailto:hello@lourusmedia.example">Let's Work Together <ArrowRight size={18} /></a>
+
+          <div className="inner-section" id="work">
+            <div className="section-heading">
+              <div><span className="kicker">Selected Work</span><h2>Work that stops the scroll.</h2></div>
+              <a href="#work" className="text-link">View All Work <ArrowRight size={14} /></a>
+            </div>
+            <div className="work-grid">
+              {work.map(item => (
+                <article className="work-card" key={item.title}>
+                  <img src={item.image} alt={`${item.category} campaign placeholder`} />
+                  <div className="work-overlay">
+                    <button className="play-button" aria-label={`Play ${item.title}`}><Play size={15} fill="currentColor" /></button>
+                    <div><span>{item.category}</span><h3>{item.title}</h3><p>{item.subtitle}</p></div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="inner-section logo-section">
+            <span className="kicker">Trusted by ambitious brands</span>
+            <div className="logo-row">{['RiseUp', 'Boldify', 'Nexora', 'Lumina', 'Velocity', 'Bloomly'].map((name, i) => <span key={name} className={`brand-${i}`}>{name}</span>)}</div>
+          </div>
+
+          <div className="inner-section" id="about">
+            <span className="kicker">Why choose us</span>
+            <div className="why-grid">
+              <div className="strength-grid">
+                {strengths.map(({ icon: Icon, title, text, tone }) => (
+                  <article className="strength-card" key={title}><span className={`strength-icon ${tone}`}><Icon size={20} /></span><div><h3>{title}</h3><p>{text}</p></div></article>
+                ))}
+              </div>
+              <article className="impact-card">
+                <span className="impact-icon"><BarChart3 size={29} /></span>
+                <div><h2>We don't just create content, we create impact.</h2><p>Data-driven strategies, creative content, and consistent execution that grows your brand every day.</p><a className="button button-light" href="#contact">Let's Work Together <ArrowRight size={15} /></a></div>
+              </article>
+            </div>
+          </div>
+
+          <div className="final-cta" id="contact">
+            <i className="confetti c1" /><i className="confetti c2" /><i className="confetti c3" /><i className="confetti c4" />
+            <span className="rocket-chip"><Rocket size={31} /></span>
+            <div><h2>Ready to make your brand<br />impossible to ignore?</h2><p>Let's create something amazing together.</p></div>
+            <a className="button" href="mailto:hello@lourusmedia.example">Let's Work Together <ArrowRight size={15} /></a>
+          </div>
+
+          <footer>
+            <div><Logo /><p>© 2026 Lourus Media. All rights reserved.</p></div>
+            <div className="footer-column"><b>Company</b>{links.map(x => <a key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div>
+            <div className="footer-column"><b>Resources</b>{['Blog', 'Case Studies', 'FAQs', 'Privacy Policy'].map(x => <a key={x} href="#home">{x}</a>)}</div>
+            <div className="follow"><b>Follow Us</b><div className="socials"><a href="#home" aria-label="Instagram"><Instagram /></a><a href="#home" aria-label="LinkedIn"><Linkedin /></a><a href="#home" aria-label="TikTok"><Clapperboard /></a><a href="#home" aria-label="YouTube"><Youtube /></a></div></div>
+          </footer>
         </Reveal>
       </main>
-
-      <footer>
-        <div className="footer-main">
-          <div><a href="#home" className="logo logo-footer"><span>L</span>Lourus Media</a><p>Creating social worth remembering.</p></div>
-          <div className="footer-links"><div>{['Home', 'Services', 'Work', 'About'].map(x => <a key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div><div>{['Blog', 'Case Studies', 'FAQs', 'Privacy Policy'].map(x => <a key={x} href="#home">{x}</a>)}</div></div>
-          <div className="socials"><a href="#home" aria-label="Instagram"><Instagram /></a><a href="#home" aria-label="LinkedIn"><Linkedin /></a><a href="#home" aria-label="TikTok"><Clapperboard /></a><a href="#home" aria-label="YouTube"><Youtube /></a></div>
-        </div>
-        <div className="copyright">© 2026 Lourus Media. All rights reserved. <span>Homepage preview with placeholder content.</span></div>
-      </footer>
     </>
   )
 }
