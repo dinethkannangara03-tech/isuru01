@@ -1,91 +1,126 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
-  ArrowRight, BarChart3, BriefcaseBusiness, Clapperboard, Instagram,
-  Layers3, Linkedin, Menu, MessageSquare, Palette, Play, Rocket,
-  Sparkles, Target, TrendingUp, Users, Video, X, Youtube, Zap,
+  ArrowRight, Camera, Check, CirclePlay, Clapperboard, Instagram, Linkedin,
+  Menu, MessageCircle, MonitorPlay, Palette, Play, Quote, Sparkles, Video,
+  WandSparkles, X, Youtube,
 } from 'lucide-react'
-import heroPortrait from './assets/hero-portrait.png'
-import beverageImage from './assets/work-beverage.png'
-import fashionImage from './assets/work-fashion.png'
-import beautyImage from './assets/work-beauty.png'
-import techImage from './assets/work-tech.png'
+import founderPortrait from './assets/founder-portrait.png'
+
+// EDITABLE CLIENT CONFIG: replace these placeholder values when supplied.
+const whatsappNumber = 'REPLACE_WITH_CLIENT_WHATSAPP_NUMBER'
+const whatsappUrl = `https://wa.me/${whatsappNumber}`
+const email = 'REPLACE_WITH_CLIENT_EMAIL'
 
 const services = [
-  { icon: MessageSquare, title: 'Social Media Management', text: 'We handle your social media, so you can focus on your business.', tone: 'purple' },
-  { icon: Sparkles, title: 'Content Creation', text: 'Scroll-stopping content that connects, engages, and converts.', tone: 'blue' },
-  { icon: Video, title: 'Video Production', text: 'High-quality videos that bring your brand story to life.', tone: 'cyan' },
-  { icon: Target, title: 'Brand Strategy', text: 'Smart strategy that builds strong brands that stand out.', tone: 'green' },
-  { icon: MegaphoneIcon, title: 'Paid Advertising', text: 'Targeted ads that reach the right people and drive real results.', tone: 'pink' },
-  { icon: Palette, title: 'Graphic Design', text: 'Eye-catching designs that communicate your brand message.', tone: 'orange' },
+  { icon: Clapperboard, title: 'Video Editing', description: 'Polished edits shaped to hold attention and tell your story.', tone: 'purple' },
+  { icon: Camera, title: 'Content Creation', description: 'Platform-ready creative content built around your brand.', tone: 'blue' },
+  { icon: MonitorPlay, title: 'Social Media Videos', description: 'Short-form videos designed for feeds, reels, and stories.', tone: 'pink' },
+  { icon: Palette, title: 'Colour Grading', description: 'A considered visual finish that gives every frame its mood.', tone: 'cyan' },
+  { icon: WandSparkles, title: 'Motion Graphics', description: 'Clean, energetic motion that makes key messages land.', tone: 'orange' },
+  { icon: CirclePlay, title: 'Brand Videos', description: 'Story-led videos that express your brand with clarity.', tone: 'green' },
 ]
 
-function MegaphoneIcon(props) {
-  return <BarChart3 {...props} />
+const projectTones = ['purple', 'blue', 'pink', 'green', 'orange', 'cyan']
+const projects = projectTones.map((tone, index) => ({
+  category: 'Category placeholder',
+  title: `Project title placeholder ${index + 1}`,
+  description: 'Short project description will be added here.',
+  duration: 'Duration',
+  tone,
+}))
+
+const clients = Array.from({ length: 6 }, (_, index) => ({ id: index + 1, name: 'Client logo' }))
+
+const testimonials = Array.from({ length: 3 }, (_, index) => ({
+  id: index + 1,
+  review: 'Client review will be added here.',
+  name: 'Client name',
+  company: 'Company name',
+  image: 'Client image or logo',
+}))
+
+const founder = {
+  name: 'Founder name',
+  role: 'Founder role',
+  bio: 'Founder bio will be added here. Share the story, creative approach, and what clients can expect when working with Lourus.Media.',
+  skills: ['Video Editing', 'Content Creation', 'Creative Strategy'],
 }
 
-const work = [
-  { title: 'Fizzy Bubbles', category: 'Beverage', subtitle: 'Campaign Video', image: beverageImage },
-  { title: 'Urban Steps', category: 'Fashion', subtitle: 'Reel Campaign', image: fashionImage },
-  { title: 'Glow Naturally', category: 'Beauty', subtitle: 'Product Reel', image: beautyImage },
-  { title: 'SoundMax', category: 'Tech', subtitle: 'Launch Campaign', image: techImage },
+const socialLinks = [
+  { icon: Instagram, label: 'Instagram placeholder', url: '#' },
+  { icon: Youtube, label: 'YouTube placeholder', url: '#' },
+  { icon: Linkedin, label: 'LinkedIn placeholder', url: '#' },
 ]
 
-const strengths = [
-  { icon: MessageSquare, title: 'Strategy First', text: 'We start with strategy, so every piece of content has a purpose and a plan.', tone: 'purple' },
-  { icon: Users, title: 'Fast Creative Execution', text: 'We move fast without compromising on quality. Ideas into content, quickly.', tone: 'blue' },
-  { icon: Layers3, title: 'Platform-Specific Content', text: 'We create content tailored for each platform and audience.', tone: 'green' },
-  { icon: TrendingUp, title: 'Measurable Growth', text: 'We track, test, and optimize for results that actually grow your brand.', tone: 'orange' },
+const navLinks = [
+  ['Home', 'home'], ['Services', 'services'], ['Work', 'work'],
+  ['About', 'about'], ['Clients', 'clients'], ['Contact', 'contact'],
 ]
 
-const links = ['Home', 'Services', 'Work', 'About']
+function WhatsAppIcon({ size = 18 }) {
+  return <MessageCircle size={size} strokeWidth={2.4} aria-hidden="true" />
+}
+
+function WhatsAppLink({ children, className = '', label }) {
+  return (
+    <a
+      className={className}
+      href={whatsappUrl}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label || children}
+    >
+      <WhatsAppIcon />{children}
+    </a>
+  )
+}
 
 function Reveal({ children, className = '', as: Tag = 'div', ...props }) {
   return <Tag className={`reveal ${className}`} {...props}>{children}</Tag>
 }
 
 function Logo() {
-  return <a href="#home" className="logo" aria-label="Lourus Media home">Lourus <span>Media</span></a>
+  return <a href="#home" className="logo" aria-label="Lourus Media home">Lourus.<span>Media</span></a>
+}
+
+function OrbitVisual({ compact = false }) {
+  return (
+    <div className={`orbit-visual ${compact ? 'orbit-visual-compact' : ''}`}>
+      <div className="portrait-glow" />
+      <svg className="orbit orbit-back" viewBox="0 0 600 520" aria-hidden="true">
+        <g className="orbit-spin orbit-a"><ellipse cx="300" cy="260" rx="274" ry="125" transform="rotate(-23 300 260)" /><circle cx="59" cy="167" r="7" /></g>
+        <g className="orbit-spin orbit-b"><ellipse cx="300" cy="260" rx="264" ry="165" transform="rotate(-4 300 260)" /><circle cx="420" cy="112" r="6" /></g>
+        <g className="orbit-spin orbit-c"><ellipse cx="300" cy="260" rx="270" ry="126" transform="rotate(23 300 260)" /><circle cx="539" cy="346" r="6" /></g>
+      </svg>
+      <div className="founder-cutout"><img src={founderPortrait} alt="Founder image placeholder" /></div>
+      <svg className="orbit orbit-front" viewBox="0 0 600 520" aria-hidden="true">
+        <ellipse className="front-a" cx="300" cy="260" rx="274" ry="125" transform="rotate(-23 300 260)" />
+        <ellipse className="front-b" cx="300" cy="260" rx="264" ry="165" transform="rotate(-4 300 260)" />
+        <ellipse className="front-c" cx="300" cy="260" rx="270" ry="126" transform="rotate(23 300 260)" />
+      </svg>
+      <span className="orbit-badge badge-play"><Play size={18} fill="currentColor" /></span>
+      <span className="orbit-badge badge-video"><Video size={19} /></span>
+      <span className="orbit-badge badge-spark"><Sparkles size={18} /></span>
+      <span className="glow-dot dot-one" /><span className="glow-dot dot-two" /><span className="glow-dot dot-three" />
+    </div>
+  )
 }
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const heroVisualRef = useRef(null)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(entry => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible')
           observer.unobserve(entry.target)
         }
-      }),
-      { threshold: 0.08 },
-    )
-    document.querySelectorAll('.reveal, .reveal-item').forEach(el => observer.observe(el))
+      })
+    }, { threshold: 0.08 })
+    document.querySelectorAll('.reveal, .reveal-item').forEach(element => observer.observe(element))
     return () => observer.disconnect()
   }, [])
-
-  const handleHeroPointerMove = event => {
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
-    const bounds = event.currentTarget.getBoundingClientRect()
-    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2
-    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2
-    event.currentTarget.style.setProperty('--parallax-x', `${x * 7}px`)
-    event.currentTarget.style.setProperty('--parallax-y', `${y * 5}px`)
-    event.currentTarget.style.setProperty('--portrait-x', `${x * 2.5}px`)
-    event.currentTarget.style.setProperty('--portrait-y', `${y * 1.8}px`)
-    event.currentTarget.style.setProperty('--orbit-x', `${x * -2}px`)
-    event.currentTarget.style.setProperty('--orbit-y', `${y * -1.5}px`)
-  }
-
-  const resetHeroParallax = event => {
-    event.currentTarget.style.setProperty('--parallax-x', '0px')
-    event.currentTarget.style.setProperty('--parallax-y', '0px')
-    event.currentTarget.style.setProperty('--portrait-x', '0px')
-    event.currentTarget.style.setProperty('--portrait-y', '0px')
-    event.currentTarget.style.setProperty('--orbit-x', '0px')
-    event.currentTarget.style.setProperty('--orbit-y', '0px')
-  }
 
   return (
     <>
@@ -93,11 +128,11 @@ function App() {
         <nav className="navbar">
           <Logo />
           <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
-            {links.map(item => <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}>{item}</a>)}
+            {navLinks.map(([label, id]) => <a href={`#${id}`} key={id} onClick={() => setMenuOpen(false)}>{label}</a>)}
           </div>
           <div className="nav-actions">
-            <a href="#contact" className="button button-small">Let's Talk</a>
-            <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
+            <WhatsAppLink className="button whatsapp nav-whatsapp">Let's Talk on WhatsApp</WhatsAppLink>
+            <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation menu">
               {menuOpen ? <X /> : <Menu />}
             </button>
           </div>
@@ -105,136 +140,110 @@ function App() {
       </header>
 
       <main>
-        <section className="hero section" id="home">
-          <div className="hero-copy hero-enter">
-            <div className="eyebrow"><i /> Creative Social Media Agency</div>
-            <h1>We turn brands into digital experiences <span>people remember.</span></h1>
-            <p className="hero-text">We help ambitious brands grow with smart strategy, scroll-stopping content, and data-driven social media campaigns that deliver real results.</p>
+        <section className="hero page-width" id="home">
+          <div className="hero-copy intro-animation">
+            <span className="eyebrow">Video Editing &amp; Content Creation</span>
+            <h1>We turn ideas into <span>scroll-stopping</span> content.</h1>
+            <p>Creative videos and social content designed to connect with people and help modern brands show up with confidence.</p>
             <div className="hero-actions">
-              <a className="button" href="#contact">Start a Project <ArrowRight size={16} /></a>
-              <a className="button button-ghost" href="#work">View Our Work <Play size={14} fill="currentColor" /></a>
+              <a href="#work" className="button primary">View Our Work <ArrowRight size={17} /></a>
+              <WhatsAppLink className="button outline-whatsapp">Let's Talk on WhatsApp</WhatsAppLink>
             </div>
-            <div className="stats">
-              {[
-                [BriefcaseBusiness, '50+', 'Projects', 'purple'],
-                [Users, '20+', 'Brands', 'blue'],
-                [TrendingUp, '1M+', 'Reach', 'green'],
-                [Sparkles, '8+', 'Markets', 'orange'],
-              ].map(([Icon, num, label, tone]) => (
-                <div className="stat" key={label}><span className={`stat-icon ${tone}`}><Icon size={18} /></span><div><strong>{num}</strong><small>{label}</small></div></div>
+            <div className="feature-strip" aria-label="Core services">
+              {['Video Editing', 'Content Creation', 'Social Media Content', 'Creative Strategy'].map((feature, index) => (
+                <div key={feature}><span className={`feature-icon ${projectTones[index]}`}><Check size={15} /></span><b>{feature}</b></div>
               ))}
             </div>
           </div>
-
-          <div
-            className="hero-visual hero-enter"
-            ref={heroVisualRef}
-            onPointerMove={handleHeroPointerMove}
-            onPointerLeave={resetHeroParallax}
-          >
-            <div className="hero-glow" />
-            <div className="decorative-dots" aria-hidden="true"><i /><i /><i /><i /></div>
-            <svg className="orbit-layer orbit-back" viewBox="0 0 560 460" aria-hidden="true">
-              <g className="ring-group ring-blue">
-                <ellipse cx="280" cy="230" rx="252" ry="112" transform="rotate(-25 280 230)" />
-                <circle className="orbit-dot dot-blue" cx="55" cy="147" r="6" />
-              </g>
-              <g className="ring-group ring-purple">
-                <ellipse cx="280" cy="230" rx="245" ry="142" transform="rotate(-7 280 230)" />
-                <circle className="orbit-dot dot-purple" cx="405" cy="101" r="6" />
-              </g>
-              <g className="ring-group ring-pink">
-                <ellipse cx="280" cy="230" rx="248" ry="116" transform="rotate(19 280 230)" />
-                <circle className="orbit-dot dot-pink" cx="506" cy="305" r="6" />
-              </g>
-            </svg>
-            <div className="portrait-card"><img src={heroPortrait} alt="Placeholder portrait for Lourus Media" /></div>
-            <svg className="orbit-layer orbit-front" viewBox="0 0 560 460" aria-hidden="true">
-              <g className="ring-group ring-blue front-ring">
-                <ellipse cx="280" cy="230" rx="252" ry="112" transform="rotate(-25 280 230)" />
-              </g>
-              <g className="ring-group ring-purple front-ring front-purple">
-                <ellipse cx="280" cy="230" rx="245" ry="142" transform="rotate(-7 280 230)" />
-              </g>
-              <g className="ring-group ring-pink front-ring front-pink">
-                <ellipse cx="280" cy="230" rx="248" ry="116" transform="rotate(19 280 230)" />
-              </g>
-            </svg>
-            <div className="float-card card-engagement"><span className="float-symbol green"><TrendingUp size={18} /></span><div><strong>+142%</strong><small>Engagement</small></div></div>
-            <div className="float-card card-strategy"><span className="float-symbol purple"><Sparkles size={17} /></span><div><strong>Creative</strong><small>Strategy</small></div></div>
-            <div className="float-card card-views"><span className="float-symbol pink"><Play size={16} fill="currentColor" /></span><div><strong>1M+</strong><small>Views</small></div></div>
-          </div>
+          <div className="intro-animation hero-art"><OrbitVisual /></div>
         </section>
 
-        <Reveal className="content-shell section" as="section">
-          <div className="inner-section" id="services">
-            <div className="section-heading">
-              <div><span className="kicker">Services</span><h2>Everything your brand needs to stand out.</h2></div>
-              <a href="#services" className="text-link">View All Services <ArrowRight size={14} /></a>
-            </div>
-            <div className="service-grid">
-              {services.map(({ icon: Icon, title, text, tone }, index) => (
-                <article className="service-card reveal-item" style={{ '--stagger': `${index * 55}ms` }} key={title}>
-                  <span className={`service-icon ${tone}`}><Icon size={21} /></span>
-                  <h3>{title}</h3><p>{text}</p><ArrowRight className="service-arrow" size={15} />
-                </article>
-              ))}
-            </div>
+        <Reveal as="section" className="section page-width" id="services">
+          <div className="section-title">
+            <div><span className="kicker">What we do</span><h2>Creative solutions for <span>modern brands.</span></h2></div>
+            <p>Thoughtful creative services for brands that want to look sharp, sound clear, and stay memorable.</p>
           </div>
-
-          <div className="inner-section" id="work">
-            <div className="section-heading">
-              <div><span className="kicker">Selected Work</span><h2>Work that stops the scroll.</h2></div>
-              <a href="#work" className="text-link">View All Work <ArrowRight size={14} /></a>
-            </div>
-            <div className="work-grid">
-              {work.map((item, index) => (
-                <article className="work-card reveal-item" style={{ '--stagger': `${index * 65}ms` }} key={item.title}>
-                  <img src={item.image} alt={`${item.category} campaign placeholder`} />
-                  <div className="work-overlay">
-                    <button className="play-button" aria-label={`Play ${item.title}`}><Play size={15} fill="currentColor" /></button>
-                    <div><span>{item.category}</span><h3>{item.title}</h3><p>{item.subtitle}</p></div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-
-          <div className="inner-section logo-section">
-            <span className="kicker">Trusted by ambitious brands</span>
-            <div className="logo-row">{['RiseUp', 'Boldify', 'Nexora', 'Lumina', 'Velocity', 'Bloomly'].map((name, i) => <span key={name} className={`brand-${i}`}>{name}</span>)}</div>
-          </div>
-
-          <div className="inner-section" id="about">
-            <span className="kicker">Why choose us</span>
-            <div className="why-grid">
-              <div className="strength-grid">
-                {strengths.map(({ icon: Icon, title, text, tone }, index) => (
-                  <article className="strength-card reveal-item" style={{ '--stagger': `${index * 55}ms` }} key={title}><span className={`strength-icon ${tone}`}><Icon size={20} /></span><div><h3>{title}</h3><p>{text}</p></div></article>
-                ))}
-              </div>
-              <article className="impact-card">
-                <span className="impact-icon"><BarChart3 size={29} /></span>
-                <div><h2>We don't just create content, we create impact.</h2><p>Data-driven strategies, creative content, and consistent execution that grows your brand every day.</p><a className="button button-light" href="#contact">Let's Work Together <ArrowRight size={15} /></a></div>
+          <div className="service-grid">
+            {services.map(({ icon: Icon, title, description, tone }, index) => (
+              <article className="card service-card reveal-item" style={{ '--delay': `${index * 55}ms` }} key={title}>
+                <span className={`service-icon ${tone}`}><Icon /></span>
+                <h3>{title}</h3><p>{description}</p><ArrowRight className="card-arrow" size={18} />
               </article>
-            </div>
+            ))}
           </div>
+        </Reveal>
 
-          <div className="final-cta" id="contact">
-            <i className="confetti c1" /><i className="confetti c2" /><i className="confetti c3" /><i className="confetti c4" />
-            <span className="rocket-chip"><Rocket size={31} /></span>
-            <div><h2>Ready to make your brand<br />impossible to ignore?</h2><p>Let's create something amazing together.</p></div>
-            <a className="button" href="mailto:hello@lourusmedia.example">Let's Work Together <ArrowRight size={15} /></a>
+        <Reveal as="section" className="section page-width" id="work">
+          <div className="section-title">
+            <div><span className="kicker">Our work</span><h2>Real projects. Real results.</h2></div>
+            <p>Project details and final thumbnails will be added when approved client content is supplied.</p>
           </div>
+          <div className="project-grid">
+            {projects.map((project, index) => (
+              <article className="card project-card reveal-item" style={{ '--delay': `${index * 55}ms` }} key={project.title}>
+                <div className={`project-image project-${project.tone}`}>
+                  <span>Thumbnail placeholder</span>
+                  <button aria-label={`Play ${project.title}`}><Play fill="currentColor" /></button>
+                  <small>{project.duration}</small>
+                </div>
+                <div className="project-body">
+                  <span className={`tag ${project.tone}`}>{project.category}</span>
+                  <h3>{project.title}</h3><p>{project.description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </Reveal>
 
-          <footer>
-            <div><Logo /><p>© 2026 Lourus Media. All rights reserved.</p></div>
-            <div className="footer-column"><b>Company</b>{links.map(x => <a key={x} href={`#${x.toLowerCase()}`}>{x}</a>)}</div>
-            <div className="footer-column"><b>Resources</b>{['Blog', 'Case Studies', 'FAQs', 'Privacy Policy'].map(x => <a key={x} href="#home">{x}</a>)}</div>
-            <div className="follow"><b>Follow Us</b><div className="socials"><a href="#home" aria-label="Instagram"><Instagram /></a><a href="#home" aria-label="LinkedIn"><Linkedin /></a><a href="#home" aria-label="TikTok"><Clapperboard /></a><a href="#home" aria-label="YouTube"><Youtube /></a></div></div>
-          </footer>
+        <Reveal as="section" className="section page-width" id="clients">
+          <div className="section-title compact-title"><div><span className="kicker">Clients</span><h2>Trusted by</h2></div></div>
+          <div className="client-grid">
+            {clients.map(client => <div className="client-placeholder" key={client.id}><Sparkles size={17} /><span>{client.name}</span></div>)}
+          </div>
+        </Reveal>
+
+        <Reveal as="section" className="section page-width">
+          <div className="section-title compact-title"><div><span className="kicker">Client reviews</span><h2>What our clients say</h2></div></div>
+          <div className="testimonial-grid">
+            {testimonials.map((testimonial, index) => (
+              <article className="card testimonial-card reveal-item" style={{ '--delay': `${index * 70}ms` }} key={testimonial.id}>
+                <Quote className="quote-icon" size={28} fill="currentColor" />
+                <p>{testimonial.review}</p>
+                <div className="reviewer"><span>{testimonial.image}</span><div><b>{testimonial.name}</b><small>{testimonial.company}</small></div></div>
+              </article>
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal as="section" className="section page-width founder-section" id="about">
+          <div className="founder-photo"><img src={founderPortrait} alt="Founder image placeholder" /><span>Founder image placeholder</span></div>
+          <div className="founder-copy">
+            <span className="kicker">About the founder</span>
+            <h2>Built on <span>creativity.</span><br />Driven by <em>results.</em></h2>
+            <h3>{founder.name}</h3><small>{founder.role}</small><p>{founder.bio}</p>
+            <div className="skill-tags">{founder.skills.map(skill => <span key={skill}>{skill}</span>)}</div>
+            <WhatsAppLink className="button whatsapp founder-button">Start a conversation</WhatsAppLink>
+          </div>
+        </Reveal>
+
+        <Reveal as="section" className="cta page-width" id="contact">
+          <span className="cta-icon"><WhatsAppIcon size={34} /></span>
+          <div><h2>Let's create content that connects.</h2><p>Start your project on WhatsApp.</p></div>
+          <span className="cta-arrow">→</span>
+          <WhatsAppLink className="button whatsapp cta-button">Chat on WhatsApp</WhatsAppLink>
         </Reveal>
       </main>
+
+      <footer className="footer page-width">
+        <div className="footer-brand"><Logo /><p>A creative social-media agency helping brands connect through thoughtful video and content.</p></div>
+        <div><b>Quick links</b>{navLinks.map(([label, id]) => <a href={`#${id}`} key={id}>{label}</a>)}</div>
+        <div><b>Services</b>{services.map(service => <a href="#services" key={service.title}>{service.title}</a>)}</div>
+        <div><b>Contact</b><WhatsAppLink>WhatsApp</WhatsAppLink><a href={`mailto:${email}`}>{email}</a><span className="socials">{socialLinks.map(({ icon: Icon, label, url }) => <a href={url} key={label} aria-label={label}><Icon size={16} /></a>)}</span></div>
+      </footer>
+
+      <WhatsAppLink className="floating-whatsapp" label="Chat with us on WhatsApp">
+        <span className="tooltip">Chat with us on WhatsApp</span>
+      </WhatsAppLink>
     </>
   )
 }
